@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Lux Job Application Assistant",
+  "version": "1.0.0",
+  "description": "Job application tracker, resume tailor, and JD analyzer.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.linkedin.com/*",
+    "*://*.naukri.com/*",
+    "*://*.internshala.com/*",
+    "*://*.instahyre.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.ts",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html"
+  },
+  "options_page": "src/options/options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.linkedin.com/*",
+        "*://*.naukri.com/*",
+        "*://*.internshala.com/*",
+        "*://*.instahyre.com/*"
+      ],
+      "js": ["src/content/analyzer.ts"]
+    }
+  ]
+}
