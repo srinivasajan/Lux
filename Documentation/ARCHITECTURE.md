@@ -11,6 +11,25 @@ Lux is a local-first Chrome Extension built on Manifest V3. It features a domain
 - **PDF Generation:** pdf-lib
 - **Storage:** Chrome `storage.local` for settings, IndexedDB for primary data
 
+## Architectural Layers
+
+### 1. Presentation Layer (UI)
+**Location**: `src/options/`, `src/popup/`
+- Standard HTML/CSS/JS (TypeScript) bound directly to the DOM.
+- Orchestrates forms, button clicks, and basic validations before passing payloads to services.
+- Displays visual success/error states directly to the user.
+
+### 2. Business Logic Layer (Services)
+**Location**: `src/features/*/`
+- Validates structural integrity using `Zod` schemas.
+- Translates UI intent into specific operations.
+- Interacts directly with the local data stores.
+
+### 3. Storage Layer
+**Location**: `src/core/storage/idb.ts` and `chrome.ts`
+- **IndexedDB via Dexie**: Serves as the master database for Profiles, Resumes, and Application tracking. Singleton pattern utilized for the master profile.
+- **Chrome Storage**: Holds lightweight extension settings (e.g., NVIDIA NIM API Key).
+
 ## Directory Structure
 The application uses a feature-based architectural pattern to ensure scalability:
 

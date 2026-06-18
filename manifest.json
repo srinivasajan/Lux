@@ -9,10 +9,7 @@
     "scripting"
   ],
   "host_permissions": [
-    "*://*.linkedin.com/*",
-    "*://*.naukri.com/*",
-    "*://*.internshala.com/*",
-    "*://*.instahyre.com/*"
+    "*://*.linkedin.com/*"
   ],
   "background": {
     "service_worker": "src/background/service-worker.ts",
@@ -25,10 +22,7 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*.linkedin.com/*",
-        "*://*.naukri.com/*",
-        "*://*.internshala.com/*",
-        "*://*.instahyre.com/*"
+        "*://*.linkedin.com/*"
       ],
       "js": ["src/content/analyzer.ts"]
     }

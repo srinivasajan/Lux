@@ -33,3 +33,11 @@
 - **Privacy:** Job hunting data is highly sensitive. Local-first guarantees no data mining or leaks.
 - **Cost:** Eliminates server, database, and hosting costs. The user provides their own NVIDIA API key, shifting the LLM computation cost away from the developer.
 - **Speed:** Instant UI responses without network latency (except for the NIM API call).
+
+## 6. Why Architecture Flattening (M1.1)?
+**Decision:** Removed the explicit Repository layer for data entities.
+**Reason:** 
+- During the M1 review, it became apparent that using both a Service layer and a Repository layer to wrap Dexie (which is already a wrapper for IndexedDB) created unnecessary boilerplate.
+- The project has zero backend API requirements; everything is local-first. 
+- Dexie's API (`db.profile.put`) is already highly expressive and typed, making custom Repository abstractions overly redundant ("wrapping a wrapper"). 
+- The Service layer remains necessary to enforce `Zod` schema validation boundaries before data touches IndexedDB.

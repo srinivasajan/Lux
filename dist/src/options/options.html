@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lux - Profile Manager</title>
+  <script type="module" crossorigin src="/assets/options.html-ByqCt0wI.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/profile.service-BD-M7A1g.js">
+  <link rel="stylesheet" crossorigin href="/assets/options-CjKXBxbs.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Lux Profile Manager</h1>
+      <p>Configure your master profile and extension settings.</p>
+    </header>
+
+    <div id="alert-box" class="alert hidden"></div>
+
+    <form id="profile-form">
+      <section class="card">
+        <h2>Personal Information</h2>
+        <div class="form-group">
+          <label for="name">Full Name *</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="text" id="phone" name="phone">
+        </div>
+        <div class="form-group">
+          <label for="linkedin">LinkedIn URL</label>
+          <input type="url" id="linkedin" name="linkedin">
+        </div>
+        <div class="form-group">
+          <label for="github">GitHub URL</label>
+          <input type="url" id="github" name="github">
+        </div>
+        <div class="form-group">
+          <label for="portfolio">Portfolio URL</label>
+          <input type="url" id="portfolio" name="portfolio">
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Skills</h2>
+        <p class="hint">Enter skills separated by commas (e.g., TypeScript, React, Node.js)</p>
+        <div class="form-group">
+          <textarea id="skills" name="skills" rows="3"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Education</h2>
+          <button type="button" id="btn-add-education" class="btn btn-secondary btn-sm">Add Education</button>
+        </div>
+        <div id="education-container"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Experience</h2>
+          <button type="button" id="btn-add-experience" class="btn btn-secondary btn-sm">Add Experience</button>
+        </div>
+        <div id="experience-container"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Projects</h2>
+          <button type="button" id="btn-add-project" class="btn btn-secondary btn-sm">Add Project</button>
+        </div>
+        <div id="projects-container"></div>
+      </section>
+
+      <section class="card">
+        <h2>Settings</h2>
+        <div class="form-group">
+          <label for="nvidiaApiKey">NVIDIA NIM API Key</label>
+          <input type="password" id="nvidiaApiKey" name="nvidiaApiKey" placeholder="nvapi-...">
+          <p class="hint">Stored entirely locally. Used for AI tailoring.</p>
+        </div>
+        <div class="form-group">
+          <label for="dailyLimit">Daily Application Limit</label>
+          <input type="number" id="dailyLimit" name="dailyLimit" min="1" value="100">
+        </div>
+      </section>
+
+      <div class="actions">
+        <button type="button" id="btn-delete" class="btn btn-danger">Delete Profile</button>
+        <button type="submit" id="btn-save" class="btn btn-primary">Save Profile</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

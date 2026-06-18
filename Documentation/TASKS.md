@@ -14,11 +14,11 @@ Every task must satisfy:
 ---
 
 ## M1: Foundation (Current)
-- [ ] **TASK-1.1:** Scaffold base Vite + `@crxjs/vite-plugin` project structure with strict TypeScript.
-- [ ] **TASK-1.2:** Setup Dexie DB schema in `core/storage/idb.ts`.
-- [ ] **TASK-1.3:** Build Profile Data models and typings in `core/types`.
-- [ ] **TASK-1.4:** Create Profile Manager UI form in `options/` using Vanilla JS/HTML/CSS.
-- [ ] **TASK-1.5:** Wire Profile Manager UI to Dexie `Profile` table (Read/Write).
+- `[x]` **TASK-1.1:** Scaffold base Vite + `@crxjs/vite-plugin` project structure with strict TypeScript.
+- `[x]` **TASK-1.2:** Setup Dexie DB schema in `core/storage/idb.ts`.
+- `[x]` **TASK-1.3:** Build Profile Data models and typings in `core/types`.
+- `[x]` **TASK-1.4:** Create Profile Manager UI form in `options/` using Vanilla JS/HTML/CSS.
+- `[x]` **TASK-1.5:** Wire Profile Manager UI to Dexie `Profile` table (Read/Write).
 
 ## M2: Analyzer
 - [ ] **TASK-2.1:** Implement LinkedIn DOM Scraper in `features/analyzer/linkedin.ts`.
