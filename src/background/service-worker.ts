@@ -1,8 +1,9 @@
 import { ProfileService } from '../features/profile/profile.service';
-import type { MessageType, GetProfileResponse } from '../core/messaging/types';
+import { ApplicationService } from '../features/tracker/application.service';
+import type { MessageType, GetProfileResponse, LogApplicationMessage, CheckApplicationMessage } from '../core/messaging/types';
 
 export function initBackground(): void {
-  chrome.runtime.onMessage.addListener((message: { type: MessageType }, _sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener((message: { type: MessageType, payload?: unknown }, _sender, sendResponse) => {
     if (message.type === 'GET_PROFILE') {
       ProfileService.getProfile()
         .then(profile => {
@@ -23,6 +24,22 @@ export function initBackground(): void {
       return false; // synchronous
     }
     
+    if (message.type === 'LOG_APPLICATION') {
+      const logMsg = message as LogApplicationMessage;
+      ApplicationService.createApplication(logMsg.payload)
+        .then((app) => sendResponse({ success: true, data: app }))
+        .catch(err => sendResponse({ success: false, error: (err as Error).message }));
+      return true;
+    }
+
+    if (message.type === 'CHECK_APPLICATION') {
+      const checkMsg = message as CheckApplicationMessage;
+      ApplicationService.getApplicationByUrl(checkMsg.payload.jobUrl)
+        .then(app => sendResponse({ success: true, data: !!app }))
+        .catch(err => sendResponse({ success: false, error: (err as Error).message }));
+      return true;
+    }
+
     return false;
   });
 }

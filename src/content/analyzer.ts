@@ -57,7 +57,22 @@ async function analyzeJob() {
     }
 
     const match = MatcherService.calculateMatch(job.description, profile);
-    sidebar.render(job, match);
+    
+    // Check if already logged
+    const isLogged = await new Promise<boolean>((resolve) => {
+      // Need a stable unique job URL, we can strip queries. 
+      // The canonical URL on LinkedIn is usually the current path.
+      const url = window.location.href.split('?')[0]; 
+      chrome.runtime.sendMessage({ 
+        type: 'CHECK_APPLICATION', 
+        payload: { jobUrl: url } 
+      }, (res: { data?: boolean }) => resolve(res?.data || false));
+    });
+
+    // Provide the clean url so the sidebar can use it
+    job.url = window.location.href.split('?')[0];
+
+    sidebar.render(job, match, isLogged);
   } finally {
     isAnalyzing = false;
   }

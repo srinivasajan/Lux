@@ -105,9 +105,13 @@ export class SidebarUI {
     }
   }
 
-  render(job: ExtractedJob, match: MatchResult) {
+  render(job: ExtractedJob, match: MatchResult, isLogged: boolean = false) {
     const matchedHtml = match.matched.map(s => `<span class="skill-tag matched">${s}</span>`).join('');
     const missingHtml = match.missing.map(s => `<span class="skill-tag missing">${s}</span>`).join('');
+
+    const buttonHtml = isLogged 
+      ? `<button disabled style="width: 100%; padding: 12px; background-color: #666; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: not-allowed;">Already Logged</button>`
+      : `<button id="btn-log-app" style="width: 100%; padding: 12px; background-color: #0073b1; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Log Application</button>`;
 
     this.contentEl.innerHTML = `
       <div class="header">
@@ -129,8 +133,43 @@ export class SidebarUI {
           <h3>Missing Skills</h3>
           <div>${missingHtml || '<span style="color: #666; font-size: 12px;">None</span>'}</div>
         </div>
+
+        <div style="margin-top: 20px;">
+          ${buttonHtml}
+        </div>
       </div>
     `;
+
+    if (!isLogged) {
+      this.shadow.getElementById('btn-log-app')?.addEventListener('click', (e) => {
+        const btn = e.target as HTMLButtonElement;
+        btn.textContent = 'Saving...';
+        btn.disabled = true;
+        
+        chrome.runtime.sendMessage({
+          type: 'LOG_APPLICATION',
+          payload: {
+            company: job.company,
+            role: job.title,
+            jobUrl: job.url || window.location.href.split('?')[0],
+            platform: 'LinkedIn',
+            status: 'Applied',
+            matchScore: match.score,
+            appliedAt: new Date().toISOString()
+          }
+        }, (res: { success?: boolean, error?: string }) => {
+          if (res && res.success) {
+            btn.textContent = 'Already Logged';
+            btn.style.backgroundColor = '#666';
+            btn.style.cursor = 'not-allowed';
+          } else {
+            btn.textContent = 'Error Saving';
+            btn.style.backgroundColor = '#d9534f';
+            console.error('Failed to log application:', res?.error);
+          }
+        });
+      });
+    }
   }
 
   renderSetupUI() {

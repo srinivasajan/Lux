@@ -2,6 +2,7 @@ export interface ExtractedJob {
   title: string;
   company: string;
   description: string;
+  url?: string;
 }
 
 export class LinkedInExtractor {
