@@ -132,7 +132,6 @@ export async function initOptions(): Promise<void> {
       if (projContainer.children.length === 0) addProject();
 
       const settings = await ChromeStorageService.getSettings();
-      (document.getElementById('nvidiaApiKey') as HTMLInputElement).value = settings.nvidiaApiKey || '';
       (document.getElementById('dailyLimit') as HTMLInputElement).value = settings.dailyApplicationLimit.toString();
     } catch (e) {
       console.error(e);
@@ -186,7 +185,6 @@ export async function initOptions(): Promise<void> {
     try {
       await ProfileService.saveProfile(payload);
       await ChromeStorageService.updateSettings({
-        nvidiaApiKey: formData.get('nvidiaApiKey') as string,
         dailyApplicationLimit: parseInt(formData.get('dailyLimit') as string, 10),
       });
       showAlert('Profile saved successfully!', 'success');

@@ -2,12 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Lux</title>
-  <script type="module" crossorigin src="/assets/popup.html-B2sKVGrk.js"></script>
+  <title>Lux Application Tracker</title>
+  <script type="module" crossorigin src="/assets/popup.html-zwikuzg8.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="stylesheet" crossorigin href="/assets/popup-tn0RQdqM.css">
+  <link rel="modulepreload" crossorigin href="/assets/schemas-BiSfgbmu.js">
+  <link rel="modulepreload" crossorigin href="/assets/application.service-hG67pIz3.js">
+  <link rel="stylesheet" crossorigin href="/assets/popup-D7Aayvlg.css">
 </head>
 <body>
-  <div id="app"></div>
+  <div class="header">
+    <h1>Lux Dashboard</h1>
+    <div class="metrics">
+      <span id="metric-total">Total: 0</span>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="search-input" placeholder="Search company or role...">
+    <select id="status-filter">
+      <option value="All">All Statuses</option>
+      <option value="Applied">Applied</option>
+      <option value="Viewed">Viewed</option>
+      <option value="Interview">Interview</option>
+      <option value="Offer">Offer</option>
+      <option value="Rejected">Rejected</option>
+    </select>
+    <button id="btn-export" title="Export to CSV">Export</button>
+  </div>
+
+  <div class="table-container">
+    <table id="applications-table">
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <!-- Rendered by JS -->
+      </tbody>
+    </table>
+    <div id="empty-state" class="empty-state" style="display: none;">
+      No applications found.
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="#" id="link-options">Open Settings</a>
+  </div>
+
 </body>
 </html>

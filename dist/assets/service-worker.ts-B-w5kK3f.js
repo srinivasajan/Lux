@@ -1,1 +1,0 @@
-import{P as n}from"./profile.service-BD-M7A1g.js";function o(){chrome.runtime.onMessage.addListener((t,c,e)=>t.type==="GET_PROFILE"?(n.getProfile().then(r=>{e({success:!0,data:r})}).catch(r=>{const s={success:!1,data:null,error:r.message};e(s)}),!0):(t.type==="OPEN_OPTIONS"&&(chrome.runtime.openOptionsPage(),e({success:!0})),!1))}o();export{o as initBackground};

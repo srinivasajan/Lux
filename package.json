@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && npx esbuild src/content/analyzer.ts --bundle --outfile=dist/analyzer-bundle.js --format=iife && node -e \"const fs=require('fs'); const m=JSON.parse(fs.readFileSync('dist/manifest.json')); m.content_scripts=[{matches:['*://*.linkedin.com/*'],js:['analyzer-bundle.js']}]; fs.writeFileSync('dist/manifest.json', JSON.stringify(m,null,2))\"",
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
@@ -21,6 +21,7 @@
     "@eslint/js": "^10.0.1",
     "@types/chrome": "^0.1.43",
     "@vitest/ui": "^4.1.9",
+    "esbuild": "^0.28.1",
     "eslint": "^10.5.0",
     "fake-indexeddb": "^6.2.5",
     "globals": "^17.6.0",

@@ -149,13 +149,14 @@ export class SidebarUI {
         chrome.runtime.sendMessage({
           type: 'LOG_APPLICATION',
           payload: {
-            company: job.company,
-            role: job.title,
+            company: job.company || 'Unknown Company',
+            role: job.title || 'Unknown Job',
             jobUrl: job.url || window.location.href.split('?')[0],
-            platform: 'LinkedIn',
-            status: 'Applied',
+            platform: 'LinkedIn',        // matches ApplicationPlatform.LinkedIn
+            status: 'Applied',           // matches ApplicationStatus.Applied
             matchScore: match.score,
-            appliedAt: new Date().toISOString()
+            appliedAt: new Date().toISOString(),
+            source: 'LinkedIn'
           }
         }, (res: { success?: boolean, error?: string }) => {
           if (res && res.success) {

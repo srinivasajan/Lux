@@ -18,6 +18,10 @@ describe('Application Tracker Integration', () => {
               messageListeners.push(fn);
             }
           } as unknown as typeof chrome.runtime.onMessage
+        },
+        scripting: {
+          getRegisteredContentScripts: () => Promise.resolve([]),
+          registerContentScripts: () => Promise.resolve(),
         }
       }
     });
@@ -31,11 +35,11 @@ describe('Application Tracker Integration', () => {
     await db.applications.clear();
   });
 
-  function simulateMessage(message: unknown): Promise<{ success: boolean; data?: any; }> {
+  function simulateMessage(message: unknown): Promise<{ success: boolean; data?: unknown; }> {
     return new Promise((resolve) => {
       let handled = false;
       for (const listener of messageListeners) {
-        if (listener(message, {}, (res: unknown) => resolve(res as any))) {
+        if (listener(message, {}, (res: unknown) => resolve(res as { success: boolean; data?: unknown }))) {
           handled = true;
         }
       }
@@ -56,7 +60,7 @@ describe('Application Tracker Integration', () => {
 
     const res = await simulateMessage({ type: 'LOG_APPLICATION', payload });
     expect(res.success).toBe(true);
-    expect(res.data.id).toBeDefined();
+    expect((res.data as any).id).toBeDefined();
 
     // Verify it was actually saved to Dexie
     const saved = await db.applications.where('jobUrl').equals('https://test.com/job').first();
@@ -73,7 +77,7 @@ describe('Application Tracker Integration', () => {
       jobUrl: 'https://exist.com',
       status: ApplicationStatus.Applied,
       appliedAt: new Date().toISOString()
-    } as any);
+    } as unknown as any);
 
     const res = await simulateMessage({ type: 'CHECK_APPLICATION', payload: { jobUrl: 'https://exist.com' } });
     expect(res.success).toBe(true);

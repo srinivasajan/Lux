@@ -10,69 +10,90 @@ let isAnalyzing = false;
 
 async function fetchProfile(): Promise<Profile | null> {
   return new Promise((resolve) => {
-    chrome.runtime.sendMessage({ type: 'GET_PROFILE' }, (response: GetProfileResponse) => {
-      if (response && response.success) {
-        resolve(response.data);
-      } else {
-        resolve(null);
-      }
-    });
+    try {
+      chrome.runtime.sendMessage({ type: 'GET_PROFILE' }, (response: GetProfileResponse) => {
+        if (chrome.runtime.lastError) { resolve(null); return; }
+        resolve(response?.success ? response.data : null);
+      });
+    } catch {
+      resolve(null);
+    }
   });
 }
 
-async function analyzeJob() {
+async function checkLogged(url: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    try {
+      chrome.runtime.sendMessage({ type: 'CHECK_APPLICATION', payload: { jobUrl: url } }, (res: { data?: boolean }) => {
+        if (chrome.runtime.lastError) { resolve(false); return; }
+        resolve(res?.data || false);
+      });
+    } catch {
+      resolve(false);
+    }
+  });
+}
+
+async function analyzeJob(): Promise<void> {
   if (isAnalyzing) return;
   isAnalyzing = true;
 
   try {
     // Only run on LinkedIn job pages
     if (!window.location.href.includes('linkedin.com/jobs')) {
-      if (sidebar) {
-        sidebar.destroy();
-        sidebar = null;
-        currentJobKey = '';
-      }
+      if (sidebar) { sidebar.destroy(); sidebar = null; currentJobKey = ''; }
       return;
     }
 
-    const job = LinkedInExtractor.extract();
-    
-    // If no job found in DOM, just return (maybe still loading)
-    if (!job) return;
+    // --- Step 1: Extract job (fail-open) ---
+    let job = LinkedInExtractor.extract();
+    if (!job) {
+      // DOM not ready yet — retry once after 1.5s
+      await new Promise(r => setTimeout(r, 1500));
+      job = LinkedInExtractor.extract();
+    }
 
-    const jobKey = job.title + '|' + job.company;
-    
-    // If we already analyzed this exact job and the sidebar is showing, don't re-run
+    const jobTitle = job?.title || 'Unknown Job';
+    const jobCompany = job?.company || 'Unknown Company';
+    const jobKey = jobTitle + '|' + jobCompany;
+
+    // Don't re-render if same job already showing
     if (jobKey === currentJobKey && sidebar) return;
     currentJobKey = jobKey;
 
-    if (!sidebar) {
-      sidebar = new SidebarUI();
-    }
+    if (!sidebar) { sidebar = new SidebarUI(); }
 
-    const profile = await fetchProfile();
-    if (!profile || !profile.personal.name) {
+    // --- Step 2: Load profile (fail-open) ---
+    let profile: Profile | null = null;
+    try { profile = await fetchProfile(); } catch { /* ignore */ }
+
+    if (!profile) {
       sidebar.renderSetupUI();
       return;
     }
 
-    const match = MatcherService.calculateMatch(job.description, profile);
-    
-    // Check if already logged
-    const isLogged = await new Promise<boolean>((resolve) => {
-      // Need a stable unique job URL, we can strip queries. 
-      // The canonical URL on LinkedIn is usually the current path.
-      const url = window.location.href.split('?')[0]; 
-      chrome.runtime.sendMessage({ 
-        type: 'CHECK_APPLICATION', 
-        payload: { jobUrl: url } 
-      }, (res: { data?: boolean }) => resolve(res?.data || false));
-    });
+    // --- Step 3: Calculate match (fail-open) ---
+    let match = { score: 0, matched: [] as string[], missing: [] as string[] };
+    try {
+      match = MatcherService.calculateMatch((job?.description) ?? '', profile);
+    } catch { /* ignore */ }
 
-    // Provide the clean url so the sidebar can use it
-    job.url = window.location.href.split('?')[0];
+    // --- Step 4: Check if logged (fail-open) ---
+    const url: string = window.location.href.split('?')[0] ?? window.location.href;
+    let isLogged = false;
+    try { isLogged = await checkLogged(url); } catch { /* ignore */ }
 
-    sidebar.render(job, match, isLogged);
+    // Populate job object for sidebar
+    const fullJob: import('../features/analyzer/linkedin.extractor').ExtractedJob = {
+      title: job?.title || jobTitle,
+      company: job?.company || jobCompany,
+      description: job?.description || '',
+      url
+    };
+
+    // --- Step 5: Render ---
+    sidebar.render(fullJob, match, isLogged);
+
   } finally {
     isAnalyzing = false;
   }
@@ -81,45 +102,32 @@ async function analyzeJob() {
 let jobObserver: MutationObserver | null = null;
 
 function observeJobContainer() {
-  const container = document.querySelector('.jobs-details') || document.querySelector('.job-view-layout');
-  if (!container) return;
-
-  if (jobObserver) {
-    jobObserver.disconnect();
-  }
+  const container = document.querySelector('.jobs-details') || document.querySelector('.job-view-layout') || document.body;
+  if (jobObserver) jobObserver.disconnect();
 
   let debounceTimer: ReturnType<typeof setTimeout>;
   jobObserver = new MutationObserver(() => {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      analyzeJob();
-    }, 500);
+    debounceTimer = setTimeout(() => { analyzeJob(); }, 500);
   });
 
-  jobObserver.observe(container, {
-    childList: true,
-    subtree: true,
-    characterData: true
-  });
+  jobObserver.observe(container, { childList: true, subtree: true, characterData: true });
 }
 
 export function initAnalyzer(): void {
-  // 1. Observe URL changes
   let lastUrl = location.href;
   new MutationObserver(() => {
     if (location.href !== lastUrl) {
       lastUrl = location.href;
-      currentJobKey = ''; // reset to force re-analysis on new URL
+      currentJobKey = '';
       analyzeJob();
       observeJobContainer();
     }
   }).observe(document.body, { childList: true, subtree: true });
 
-  // Initial trigger
-  setTimeout(() => {
-    analyzeJob();
-    observeJobContainer();
-  }, 1000);
+  // Initial trigger — 1s for DOM to settle, then 3s fallback
+  setTimeout(() => { analyzeJob(); observeJobContainer(); }, 1000);
+  setTimeout(() => { if (!sidebar) analyzeJob(); }, 3000);
 }
 
 initAnalyzer();

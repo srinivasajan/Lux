@@ -1,7 +1,6 @@
 // src/core/storage/chrome.ts
 
 export interface Settings {
-  nvidiaApiKey?: string;
   dailyApplicationLimit: number;
 }
 

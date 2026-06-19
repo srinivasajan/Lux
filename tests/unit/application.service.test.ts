@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { ApplicationService } from '../../src/features/tracker/application.service';
-import { ApplicationStatus, ApplicationPlatform } from '../../src/core/types/application';
+import { ApplicationStatus, ApplicationPlatform, type Application } from '../../src/core/types/application';
 import { db } from '../../src/core/storage/idb';
 
 describe('ApplicationService', () => {
@@ -36,7 +36,7 @@ describe('ApplicationService', () => {
 
   it('should validate zod schema on creation', async () => {
     const invalidApp = { ...validApp, company: '' };
-    await expect(ApplicationService.createApplication(invalidApp as any)).rejects.toThrow('Validation failed');
+    await expect(ApplicationService.createApplication(invalidApp as unknown as Application)).rejects.toThrow('Validation failed');
   });
 
   it('should retrieve applications sorted by date descending', async () => {
@@ -45,7 +45,7 @@ describe('ApplicationService', () => {
 
     const apps = await ApplicationService.listApplications();
     expect(apps.length).toBe(2);
-    expect(apps[0].appliedAt).toContain('2023-01-02'); // newest first
+    expect(apps[0]?.appliedAt).toContain('2023-01-02'); // newest first
   });
 
   it('should update an application', async () => {

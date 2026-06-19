@@ -57,11 +57,10 @@ describe('Profile & Settings Integration Tests', () => {
     expect(settings.dailyApplicationLimit).toBe(100);
 
     // Update settings
-    await ChromeStorageService.updateSettings({ nvidiaApiKey: 'nv-test-key', dailyApplicationLimit: 50 });
+    await ChromeStorageService.updateSettings({ dailyApplicationLimit: 50 });
     
     // Retrieve settings
     settings = await ChromeStorageService.getSettings();
-    expect(settings.nvidiaApiKey).toBe('nv-test-key');
     expect(settings.dailyApplicationLimit).toBe(50);
   });
 
