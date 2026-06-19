@@ -2,6 +2,7 @@
 
 export interface Settings {
   dailyApplicationLimit: number;
+  geminiApiKey?: string;
 }
 
 const DEFAULT_SETTINGS: Settings = {

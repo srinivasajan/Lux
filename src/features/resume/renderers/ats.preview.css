@@ -1,0 +1,92 @@
+/* ats.preview.css — ATS Classic template preview styles
+ * Canonical CSS for the ATS single-column resume renderer.
+ * This file is the design source of truth; the renderer embeds it inline.
+ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 11pt;
+  color: #000;
+  background: #fff;
+  padding: 0.5in;
+  line-height: 1.4;
+}
+
+.resume-name {
+  font-size: 16pt;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.35rem;
+}
+
+.section {
+  margin-bottom: 0.5rem;
+}
+
+.section-title {
+  font-size: 11pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom: 1px solid #000;
+  padding-bottom: 2px;
+  margin: 0.45rem 0 0.3rem;
+}
+
+.entry {
+  margin-bottom: 0.35rem;
+}
+
+.entry-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.entry-title {
+  font-weight: bold;
+}
+
+.entry-org {
+  font-style: italic;
+}
+
+.entry-date {
+  white-space: nowrap;
+}
+
+.bullets {
+  margin: 0.2rem 0 0 1.2rem;
+}
+
+.bullets li {
+  margin-bottom: 0.1rem;
+}
+
+.summary-text {
+  margin-top: 0.1rem;
+}
+
+.skill-items {
+  margin-top: 0.1rem;
+}
+
+.proj-stack {
+  font-size: 10pt;
+  color: #333;
+}
+
+.proj-link {
+  font-size: 10pt;
+}
+
+.empty-hint {
+  color: #666;
+  font-style: italic;
+  font-size: 10pt;
+}

@@ -1,0 +1,182 @@
+/* modern.preview.css — Modern template preview styles
+ * Canonical CSS for the two-column Modern resume renderer.
+ * This file is the design source of truth; the renderer embeds it inline.
+ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  color: #1f2937;
+  background: #fff;
+}
+
+.resume {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100%;
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────── */
+
+.sidebar {
+  background: #1e3a8a;
+  color: #fff;
+  padding: 1.5rem 1rem;
+}
+
+/* ── Main column ──────────────────────────────────────────────────────── */
+
+.main {
+  padding: 1.5rem;
+  background: #fff;
+}
+
+/* ── Resume name ──────────────────────────────────────────────────────── */
+
+.resume-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+/* ── Sections ─────────────────────────────────────────────────────────── */
+
+.section {
+  margin-bottom: 1.2rem;
+}
+
+.section-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.6rem;
+}
+
+.sidebar .section-title {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.main .section-title {
+  border-bottom: 2px solid #1e3a8a;
+  color: #1e3a8a;
+}
+
+/* ── Skill items (sidebar) ────────────────────────────────────────────── */
+
+.skill-item {
+  font-size: 0.8rem;
+  padding: 0.15rem 0;
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ── Entries (experience, education, project) ─────────────────────────── */
+
+.entry {
+  margin-bottom: 0.8rem;
+}
+
+.entry-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.entry-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.entry-org {
+  color: #4b5563;
+  font-size: 0.82rem;
+}
+
+.sidebar .entry-org {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.entry-date {
+  font-size: 0.78rem;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.sidebar .entry-date {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.bullets {
+  margin: 0.3rem 0 0 1rem;
+}
+
+.bullets li {
+  font-size: 0.82rem;
+  margin-bottom: 0.15rem;
+}
+
+/* ── Summary ──────────────────────────────────────────────────────────── */
+
+.summary-text {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #374151;
+}
+
+/* ── Tag row (skills in main column) ─────────────────────────────────── */
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.3rem;
+}
+
+.tag {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+}
+
+/* ── Project ──────────────────────────────────────────────────────────── */
+
+.proj-stack {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-top: 0.15rem;
+}
+
+.proj-link {
+  font-size: 0.78rem;
+  color: #2563eb;
+  margin-top: 0.1rem;
+}
+
+/* ── Empty hints ──────────────────────────────────────────────────────── */
+
+.empty-hint {
+  font-style: italic;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.main .empty-hint {
+  color: #9ca3af;
+}
